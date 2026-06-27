@@ -17,18 +17,8 @@ on:
         required: true
         type: choice
         options:
-          - OOS14+15+16
-          - OOS15+16
-          - OOS14+15
           - OOS16
-          - OOS15
-          - OOS14
-          - android16-6.12
-          - android15-6.6
-          - android14-6.1
-          - android13-5.15
-          - android12-5.10
-        default: OOS14+15+16
+        default: OOS16
       ksu_type:
         description: 'Select KSU Type'
         required: true
@@ -172,6 +162,8 @@ jobs:
           esac
           
           filtered=$(jq -c "$jq_filter" matrix.json)
+          # Hard filter: this fork only builds OnePlus 13 (oos16/oneplus_13_w)
+          filtered=$(echo "$filtered" | jq -c 'map(select(.model == "OP13"))')
           count=$(jq 'length' <<<"$filtered")
           
           filtered=$(echo "$filtered" | jq '
